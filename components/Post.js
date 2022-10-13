@@ -135,7 +135,7 @@ function Post({ id, post, isPostPage }) {
                     <img
                         src={post?.image}
                         alt=""
-                        className="max-h-[300px] object-cover"
+                        className="max-h-[370px] object-contain w-[250px] ml-5 rounded-lg"
                     />
                 )
             }
