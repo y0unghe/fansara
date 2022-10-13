@@ -2,9 +2,11 @@ import React from 'react'
 import SidebarLink from './SidebarLink'
 import { BellIcon, UserCircleIcon, ChatBubbleLeftEllipsisIcon, BookmarkIcon, HomeIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router';
 
 function Sidebar() {
     const { data: session } = useSession();
+    const router = useRouter();
 
     return (
         <div className='fixed h-full flex flex-col items-start w-[340px] p-2 gap-4'>
@@ -12,8 +14,16 @@ function Sidebar() {
                 className='rounded-full cursor-pointer h-10 w-10 ml-2 mt-5 hover:border-4 hover:border-blue-500'
                 src={session.user.image}
                 alt={session.user.name} />
-            <SidebarLink Icon={HomeIcon} text="Home" active />
-            <SidebarLink Icon={BellIcon} text="Notifications" />
+            <SidebarLink
+                Icon={HomeIcon}
+                text="Home"
+                active
+                onClick={() => router.push("/")} />
+            <SidebarLink
+                Icon={BellIcon}
+                text="Notifications"
+                onClick={() => router.push("/notifications")}
+            />
             <SidebarLink Icon={ChatBubbleLeftEllipsisIcon} text="Messages" />
             <SidebarLink Icon={BookmarkIcon} text="Bookmarks" />
             <SidebarLink Icon={UserGroupIcon} text="Subscriptions" />
