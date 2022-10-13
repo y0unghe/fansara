@@ -20,6 +20,7 @@ export const authOptions = {
             return session;
         },
     },
+    secret: "IamVeryGoodLookingDude"
 }
 
 export default NextAuth(authOptions)
