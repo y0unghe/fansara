@@ -1,10 +1,92 @@
 import { BookmarkIcon, ChatBubbleOvalLeftIcon, EllipsisHorizontalIcon, HeartIcon } from '@heroicons/react/24/outline'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import {
+    HeartIcon as HeartIconFilled,
+    ChatIcon as ChatIconFilled,
+    BookmarkIcon as BookmarkIconFilled
+} from '@heroicons/react/24/solid';
 import Moment from "react-moment";
+import { useSession } from 'next-auth/react'
+import { useRecoilState } from "recoil";
+import { modalState, postIdState } from "../atoms/modalAtom";
+import { useRouter } from 'next/router';
+import {
+    collection,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    orderBy,
+    query,
+    setDoc,
+} from "@firebase/firestore";
+import { db } from "../firebase";
 
 function Post({ id, post }) {
+    const { data: session } = useSession();
+    const [isOpen, setIsOpen] = useRecoilState(modalState);
+    const [postId, setPostId] = useRecoilState(postIdState);
+    const [liked, setLiked] = useState(false);
+    const [likes, setLikes] = useState([]);
+    const [bookmarked, setBookmarked] = useState(false);
+    const [bookmarks, setBookmarks] = useState([]);
+
+    const router = useRouter();
+
+    const likePost = async () => {
+        if (liked) {
+            await deleteDoc(doc(db, "posts", id, "likes", session.user.uid));
+        } else {
+            await setDoc(doc(db, "posts", id, "likes", session.user.uid), {
+                username: session.user.name
+            });
+        }
+    }
+
+    const bookmark = async () => {
+        if (bookmarked) {
+            await deleteDoc(doc(db, "posts", id, "bookmarks", session.user.uid));
+        } else {
+            await setDoc(doc(db, "posts", id, "bookmarks", session.user.uid), {
+                username: session.user.name
+            });
+        }
+    }
+
+    useEffect(
+        () =>
+            onSnapshot(collection(db, "posts", id, "likes"), (snapshot) =>
+                setLikes(snapshot.docs)
+            ),
+        [db, id]
+    );
+
+    useEffect(
+        () =>
+            onSnapshot(collection(db, "posts", id, "bookmarks"), (snapshot) =>
+                setBookmarks(snapshot.docs)
+            ),
+        [db, id]
+    );
+
+    useEffect(
+        () =>
+            setLiked(
+                likes.findIndex((like) => like.id === session.user.uid) !== -1
+            ),
+        [likes]
+    );
+
+    useEffect(
+        () =>
+            setBookmarked(
+                bookmarks.findIndex((bookmark) => bookmark.id === session.user.uid) !== -1),
+        [bookmarks]
+    )
+
     return (
-        <div className='flex flex-col py-5 space-y-5 border-b-2 border-gray-100'>
+        <div
+            onClick={() => router.push(`/${id}`)}
+            className='flex flex-col py-5 space-y-5 border-b-2 border-gray-100 cursor-pointer'>
             {/* Header */}
             <div className='flex flex-row justify-between items-center px-5'>
                 {/* 用户信息 */}
@@ -32,22 +114,59 @@ function Post({ id, post }) {
                     />
                 </div>
             </div>
+            {/* Post Content */}
             <p className='px-5'>
                 {post.text}
             </p>
+            {/* Post Image */}
             <img
                 src={post?.image}
                 alt=""
                 className="max-h-[300px] object-cover"
             />
+            {/* Post Actions */}
             <div className='flex flex-row justify-between px-5'>
                 <div className='flex flex-row space-x-5'>
-                    <HeartIcon className='smallIcon' />
-                    <ChatBubbleOvalLeftIcon
+                    <div
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            likePost();
+                        }}
+                        className='flex flex-row space-x-2 items-center'>
+                        {
+                            liked ? (
+                                <HeartIconFilled className="smallIcon text-red-500" />
+                            ) : (
+                                <HeartIcon className='smallIcon' />
+                            )
+                        }
+                        {
+                            likes.length > 0 && (
+                                <span className=' text-gray-400 text-sm'>
+                                    {likes.length}
+                                </span>
+                            )
+                        }
+                    </div>
+                    <ChatBubbleOvalLeftIcon onClick={(e) => {
+                        e.stopPropagation();
+                        setPostId(id);
+                        setIsOpen(true);
+                    }}
                         className='smallIcon' />
                 </div>
-                <BookmarkIcon
-                    className='smallIcon' />
+                <div onClick={(e) => {
+                    e.stopPropagation();
+                    bookmark();
+                }}>
+                    {
+                        bookmarked ? (
+                            <BookmarkIconFilled className='smallIcon text-blue-500' />
+                        ) : (
+                            <BookmarkIcon className='smallIcon' />
+                        )
+                    }
+                </div>
             </div>
         </div>
     )
