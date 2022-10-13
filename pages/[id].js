@@ -19,6 +19,7 @@ import {
     query,
 } from "@firebase/firestore";
 import Comment from '../components/Comment';
+import Widgets from '../components/Widgets';
 
 function PostPage({ providers }) {
     const isOpen = useRecoilValue(modalState);
@@ -59,8 +60,8 @@ function PostPage({ providers }) {
             </Head>
             <main className='min-h-screen flex max-w-[1500px] mx-auto'>
                 <Sidebar />
-                <div className=' ml-[340px] max-w-2xl flex-grow border-l border-r border-gray-200 border-1'>
-                    <div className='text-black font-bold p-4 border-b border-1 border-gray-200 sticky'>
+                <div className='ml-[340px] flex-grow border-l border-r border-gray-200 border-1'>
+                    <div className='top-0 z-50 bg-white text-black font-bold p-4 border-b border-1 border-gray-200 sticky'>
                         <div
                             className=" hover:text-blue-500 w-5 h-5 flex items-center justify-center px-0 cursor-pointer"
                             onClick={() => router.push("/")}
@@ -88,6 +89,7 @@ function PostPage({ providers }) {
                         )}
                     </div>
                 </div>
+                <Widgets />
                 {isOpen && <Modal />}
             </main>
         </div>

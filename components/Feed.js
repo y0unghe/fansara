@@ -17,8 +17,8 @@ function Feed() {
     );
 
     return (
-        <div className=' ml-[340px] max-w-2xl flex-grow border-l border-r border-gray-200 border-1'>
-            <div className='text-black font-bold p-4 border-b border-1 border-gray-200 sticky'>
+        <div className=' ml-[340px] flex-grow border-l border-r border-gray-200 border-1'>
+            <div className='bg-white top-0 z-50 text-black font-bold p-4 border-b border-1 border-gray-200 sticky'>
                 Home
             </div>
             <Input />

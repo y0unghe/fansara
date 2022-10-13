@@ -9,7 +9,7 @@ function Sidebar() {
     const router = useRouter();
 
     return (
-        <div className='fixed h-full flex flex-col items-start w-[340px] p-2 gap-4'>
+        <div className='fixed h-full flex flex-col items-start w-[350px] p-2 gap-4'>
             <img
                 className='rounded-full cursor-pointer h-10 w-10 ml-2 mt-5 hover:border-4 hover:border-blue-500'
                 src={session.user.image}

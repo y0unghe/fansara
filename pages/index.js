@@ -6,6 +6,7 @@ import { getProviders, getSession, useSession } from "next-auth/react";
 import { useRecoilValue } from "recoil";
 import { modalState } from "../atoms/modalAtom";
 import Modal from '../components/Modal';
+import Widgets from '../components/Widgets';
 
 export default function Home({ providers }) {
   const { data: session } = useSession();
@@ -25,7 +26,7 @@ export default function Home({ providers }) {
       <main className='min-h-screen flex max-w-[1500px] mx-auto'>
         <Sidebar />
         <Feed />
-
+        <Widgets />
         {isOpen && <Modal />}
       </main>
     </div>
