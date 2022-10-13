@@ -13,7 +13,6 @@ import { db } from "../firebase";
 import { useSession } from "next-auth/react";
 import {
     PhotoIcon,
-    XMarkIcon,
     XCircleIcon
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";

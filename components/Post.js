@@ -23,7 +23,7 @@ import {
 } from "@firebase/firestore";
 import { db } from "../firebase";
 
-function Post({ id, post }) {
+function Post({ id, post, isPostPage }) {
     const { data: session } = useSession();
     const setIsOpen = useSetRecoilState(modalState);
     const setPostId = useSetRecoilState(postIdState);
@@ -73,18 +73,18 @@ function Post({ id, post }) {
 
     useEffect(
         () =>
-            onSnapshot(collection(db, "posts", id, "bookmarks"), (snapshot) =>
-                setBookmarks(snapshot.docs)
-            ),
-        [db, id]
-    );
-
-    useEffect(
-        () =>
             setLiked(
                 likes.findIndex((like) => like.id === session.user.uid) !== -1
             ),
         [likes]
+    );
+
+    useEffect(
+        () =>
+            onSnapshot(collection(db, "posts", id, "bookmarks"), (snapshot) =>
+                setBookmarks(snapshot.docs)
+            ),
+        [db, id]
     );
 
     useEffect(
@@ -96,8 +96,8 @@ function Post({ id, post }) {
 
     return (
         <div
-            onClick={() => router.push(`/${id}`)}
-            className='flex flex-col py-5 space-y-5 border-b-2 border-gray-100 cursor-pointer'>
+            onClick={() => isPostPage ? null : router.push(`/${id}`)}
+            className={`flex flex-col py-5 space-y-5 border-b-2 border-gray-100 ${!isPostPage && "cursor-pointer"}`}>
             {/* Header */}
             <div className='flex flex-row justify-between items-center px-5'>
                 {/* 用户信息 */}
@@ -130,11 +130,15 @@ function Post({ id, post }) {
                 {post.text}
             </p>
             {/* Post Image */}
-            <img
-                src={post?.image}
-                alt=""
-                className="max-h-[300px] object-cover"
-            />
+            {
+                post.image && (
+                    <img
+                        src={post?.image}
+                        alt=""
+                        className="max-h-[300px] object-cover"
+                    />
+                )
+            }
             {/* Post Actions */}
             <div className='flex flex-row justify-between px-5'>
                 <div className='flex flex-row space-x-5'>

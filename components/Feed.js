@@ -25,7 +25,7 @@ function Feed() {
             <div className='pb-72'>
                 {
                     posts.map((post) => (
-                        <Post key={post.id} id={post.id} post={post.data()} />
+                        <Post isPostPage={false} key={post.id} id={post.id} post={post.data()} />
                     ))
                 }
             </div>
