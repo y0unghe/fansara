@@ -1,12 +1,16 @@
-import { async } from '@firebase/util'
 import Head from 'next/head'
 import Feed from '../components/Feed'
 import Sidebar from '../components/Sidebar'
 import Login from '../components/Login';
 import { getProviders, getSession, useSession } from "next-auth/react";
+import { useRecoilValue } from "recoil";
+import { modalState } from "../atoms/modalAtom";
+import Modal from '../components/Modal';
 
 export default function Home({ providers }) {
   const { data: session } = useSession();
+  const isOpen = useRecoilValue(modalState);
+
   if (!session) {
     return <Login providers={providers} />
   }
@@ -21,6 +25,8 @@ export default function Home({ providers }) {
       <main className='min-h-screen flex max-w-[1500px] mx-auto'>
         <Sidebar />
         <Feed />
+
+        {isOpen && <Modal />}
       </main>
     </div>
   )

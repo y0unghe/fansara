@@ -1,13 +1,17 @@
-import { BookmarkIcon, ChatBubbleOvalLeftIcon, EllipsisHorizontalIcon, HeartIcon } from '@heroicons/react/24/outline'
+import {
+    BookmarkIcon,
+    ChatBubbleOvalLeftIcon,
+    EllipsisHorizontalIcon,
+    HeartIcon
+} from '@heroicons/react/24/outline'
 import React, { useEffect, useState } from 'react'
 import {
     HeartIcon as HeartIconFilled,
-    ChatIcon as ChatIconFilled,
     BookmarkIcon as BookmarkIconFilled
 } from '@heroicons/react/24/solid';
 import Moment from "react-moment";
 import { useSession } from 'next-auth/react'
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { modalState, postIdState } from "../atoms/modalAtom";
 import { useRouter } from 'next/router';
 import {
@@ -15,20 +19,19 @@ import {
     deleteDoc,
     doc,
     onSnapshot,
-    orderBy,
-    query,
     setDoc,
 } from "@firebase/firestore";
 import { db } from "../firebase";
 
 function Post({ id, post }) {
     const { data: session } = useSession();
-    const [isOpen, setIsOpen] = useRecoilState(modalState);
-    const [postId, setPostId] = useRecoilState(postIdState);
+    const setIsOpen = useSetRecoilState(modalState);
+    const setPostId = useSetRecoilState(postIdState);
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState([]);
     const [bookmarked, setBookmarked] = useState(false);
     const [bookmarks, setBookmarks] = useState([]);
+    const [comments, setComments] = useState([]);
 
     const router = useRouter();
 
@@ -51,6 +54,14 @@ function Post({ id, post }) {
             });
         }
     }
+
+    useEffect(
+        () =>
+            onSnapshot(collection(db, "posts", id, "comments"), (snapshot) =>
+                setComments(snapshot.docs)
+            ),
+        [db, id]
+    )
 
     useEffect(
         () =>
@@ -148,12 +159,22 @@ function Post({ id, post }) {
                             )
                         }
                     </div>
-                    <ChatBubbleOvalLeftIcon onClick={(e) => {
-                        e.stopPropagation();
-                        setPostId(id);
-                        setIsOpen(true);
-                    }}
-                        className='smallIcon' />
+                    <div
+                        className='flex flex-row space-x-2 items-center'
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setPostId(id);
+                            setIsOpen(true);
+                        }}>
+                        <ChatBubbleOvalLeftIcon className='smallIcon' />
+                        {
+                            comments.length > 0 && (
+                                <span className=' text-gray-400 text-sm'>
+                                    {comments.length}
+                                </span>
+                            )
+                        }
+                    </div>
                 </div>
                 <div onClick={(e) => {
                     e.stopPropagation();
