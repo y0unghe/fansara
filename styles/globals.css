@@ -9,6 +9,9 @@
 }
 
 @layer components {
+    .smallIcon {
+        @apply text-gray-400 w-6 cursor-pointer hover:text-blue-500
+    }
     .hoverAnimation {
         @apply hover:bg-blue-400 hover:bg-opacity-10 rounded-full cursor-pointer px-3 py-2;
     }
