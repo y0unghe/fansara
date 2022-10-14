@@ -31,7 +31,6 @@ function Post({ id, post, isPostPage }) {
     const [liked, setLiked] = useState(false);
     const [likes, setLikes] = useState([]);
     const [bookmarked, setBookmarked] = useState(false);
-    const [bookmarks, setBookmarks] = useState([]);
     const [comments, setComments] = useState([]);
 
     const router = useRouter();
@@ -83,17 +82,10 @@ function Post({ id, post, isPostPage }) {
 
     useEffect(
         () =>
-            onSnapshot(collection(db, "posts", id, "bookmarks"), (snapshot) =>
-                setBookmarks(snapshot.docs)
-            ),
-        [db, id]
-    );
-
-    useEffect(
-        () =>
-            setBookmarked(
-                bookmarks.findIndex((bookmark) => bookmark.id === session.user.uid) !== -1),
-        [bookmarks]
+            onSnapshot(doc(db, 'users', session.user.uid, 'bookmarks', id), (snapshot) => {
+                setBookmarked(snapshot.exists());
+            })
+        , [db]
     )
 
     return (
