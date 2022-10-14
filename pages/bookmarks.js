@@ -15,6 +15,9 @@ function Bookmark() {
             onSnapshot(
                 query(collection(db, "users", session.user.uid, 'bookmarks'), orderBy("timestamp", "desc")),
                 async (snapshot) => {
+                    if (snapshot.docs.length === 0) {
+                        return;
+                    }
                     const ids = snapshot.docs.map(doc => {
                         const data = doc.data();
                         const postId = data.postId;
