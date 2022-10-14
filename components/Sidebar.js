@@ -23,7 +23,7 @@ function Sidebar() {
             <SidebarLink
                 Icon={HomeIcon}
                 text="Home"
-                active
+                active={router.pathname === "/"}
                 onClick={() => router.push("/")} />
             <SidebarLink
                 Icon={BellIcon}
@@ -32,6 +32,7 @@ function Sidebar() {
             />
             <SidebarLink Icon={ChatBubbleLeftEllipsisIcon} text="Messages" />
             <SidebarLink
+                active={router.pathname === '/bookmarks'}
                 onClick={() => router.push("/bookmarks")}
                 Icon={BookmarkIcon}
                 text="Bookmarks" />
