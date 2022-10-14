@@ -1,13 +1,26 @@
 import { useRouter } from 'next/router'
-import React from 'react'
+import React, { useState } from 'react'
 import { ArrowLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
 import Sidebar from '../../components/Sidebar'
 import { getSession, useSession } from "next-auth/react";
 import Head from 'next/head'
+import { db } from '../../firebase'
+import { updateDoc, doc } from 'firebase/firestore';
 
 function Subscription() {
     const router = useRouter();
     const { data: session } = useSession();
+    const [price, setPrice] = useState(null);
+
+    const save = async () => {
+        const docRef = doc(db, "users", session.user.uid);
+
+        await updateDoc(docRef, {
+            pricePerMonth: price
+        })
+
+        router.push('/settings/profile');
+    }
 
     return (
         <div>
@@ -62,15 +75,23 @@ function Subscription() {
                             <div className='flex flex-row items-center space-x-2 text-gray-300'>
                                 <span>$</span>
                                 <input
+                                    onChange={(e) => {
+                                        const price = e.target.value;
+                                        setPrice(price);
+                                    }}
+                                    value={price}
                                     placeholder='Free'
                                     className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                     id="name"
-                                    type="text" />
+                                    type="number" />
                             </div>
                         </div>
                         <div className='flex flex-row justify-end space-x-5'>
                             <button className='text-blue-500 hover:text-blue-600'>Cancel</button>
-                            <button className='text-white hover:bg-blue-600 bg-blue-500 px-5 py-2 rounded-full'>Save</button>
+                            <button
+                                onClick={save}
+                                disabled={!price}
+                                className={`text-white ${price ? "bg-blue-500 hover:bg-blue-600" : "bg-gray-300"}   px-5 py-2 rounded-full`}>Save</button>
                         </div>
                     </div>
 
