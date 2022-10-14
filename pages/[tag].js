@@ -16,7 +16,7 @@ import {
     orderBy,
     where,
     query,
-    limit
+    limit,
 } from "@firebase/firestore";
 import Widgets from '../components/Widgets';
 
@@ -25,12 +25,21 @@ function UserPage() {
     const router = useRouter();
     const { tag } = router.query;
     const [posts, setPosts] = useState([]);
-    const { data: session } = useSession();
+    const [user, setUser] = useState({});
+
+    useEffect(
+        () =>
+            onSnapshot(query(collection(db, "users"),
+                where("tag", "==", tag),
+                limit(1)), (snapshot) => {
+                    setUser(snapshot.docs[0].data())
+                }), [db, tag]
+    )
 
     useEffect(
         () =>
             onSnapshot(query(collection(db, "posts"),
-                where("tag", "==", session.user.tag),
+                where("tag", "==", tag),
                 orderBy("timestamp", "desc"),
                 limit(10)), (snapshot) => {
                     setPosts(snapshot.docs);
@@ -52,7 +61,7 @@ function UserPage() {
                             onClick={() => router.push("/")}
                             className='w-5 cursor-pointer hover:text-blue-500' />
                         <div className='flex flex-col'>
-                            <h1 className='text-lg'>{session.user.name}</h1>
+                            <h1 className='text-lg'>{user.username}</h1>
                             <div className='flex flex-row space-x-1 text-xs'>
                                 <span>1.1K Posts</span>
                                 <span>233.4K Likes</span>
@@ -63,11 +72,11 @@ function UserPage() {
                     <div className='flex flex-col items-start mx-5 mt-20 space-y-3 pb-5'>
                         <img
                             className='rounded-full h-20 w-20'
-                            src={session.user.image}
-                            alt={session.user.name} />
+                            src={user.userImg}
+                            alt={user.username} />
                         <div className='flex flex-col'>
-                            <h1 className='text-lg font-medium'>{session.user.name}</h1>
-                            <span className='text-gray-400 text-sm'>@{session.user.tag}</span>
+                            <h1 className='text-lg font-medium'>{user.username}</h1>
+                            <span className='text-gray-400 text-sm'>@{user.tag}</span>
                         </div>
                     </div>
                     <div className='flex flex-col px-5 space-y-3 border-y-[1px] border-y-gray-200 py-5'>
