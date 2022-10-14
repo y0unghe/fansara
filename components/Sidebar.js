@@ -3,6 +3,7 @@ import SidebarLink from './SidebarLink'
 import { BellIcon, UserCircleIcon, ChatBubbleLeftEllipsisIcon, BookmarkIcon, HomeIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
+import { signOut } from "next-auth/react";
 
 function Sidebar() {
     const { data: session } = useSession();
@@ -11,6 +12,7 @@ function Sidebar() {
     return (
         <div className='fixed h-full flex flex-col items-start w-[350px] p-2 gap-4'>
             <img
+                onClick={() => signOut()}
                 className='rounded-full cursor-pointer h-10 w-10 ml-3 mt-5 hover:border-4 hover:border-blue-500'
                 src={session.user.image}
                 alt={session.user.name} />

@@ -4,22 +4,19 @@ import Sidebar from '../components/Sidebar'
 import { useRecoilValue } from "recoil";
 import { modalState } from "../atoms/modalAtom";
 import Modal from '../components/Modal';
-import { getProviders, getSession, useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-import Login from '../components/Login';
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
 import Post from '../components/Post';
 import {
     collection,
-    doc,
     onSnapshot,
     orderBy,
     where,
     query,
-    limit,
-    getDocs
+    limit
 } from "@firebase/firestore";
 import Widgets from '../components/Widgets';
 
@@ -30,16 +27,6 @@ function UserPage() {
     const [posts, setPosts] = useState([]);
     const { data: session } = useSession();
 
-    // const getPosts = async () => {
-    //     const q = query(collection(db, "posts"),
-    //         where("tag", "==", session.user.tag),
-    //         orderBy("timestamp", "desc"),
-    //         limit(10));
-
-    //     const querySnapshot = await getDocs(q);
-    //     const docs = querySnapshot.size();
-    // }
-
     useEffect(
         () =>
             onSnapshot(query(collection(db, "posts"),
@@ -49,12 +36,6 @@ function UserPage() {
                     setPosts(snapshot.docs);
                 }), [db, tag]
     )
-
-    // useEffect(
-    //     () => {
-    //         getPosts();
-    //     }, [db, tag]
-    // );
 
     return (
         <div>
