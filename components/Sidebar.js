@@ -12,7 +12,11 @@ function Sidebar() {
     return (
         <div className='fixed h-full flex flex-col items-start w-[350px] p-2 gap-4'>
             <img
-                onClick={() => signOut()}
+                onClick={() => {
+                    // signOut()
+                    // router.push('/');
+                    router.push('/settings/profile')
+                }}
                 className='rounded-full cursor-pointer h-10 w-10 ml-3 mt-5 hover:border-4 hover:border-blue-500'
                 src={session.user.image}
                 alt={session.user.name} />
