@@ -1,16 +1,16 @@
 import React from 'react'
 import Head from 'next/head'
-import Sidebar from '../components/Sidebar'
+import Sidebar from '../../../components/Sidebar'
 import { useRecoilValue } from "recoil";
-import { modalState } from "../atoms/modalAtom";
-import Modal from '../components/Modal';
+import { modalState } from "../../../atoms/modalAtom";
+import Modal from '../../../components/Modal';
 import { getProviders, getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { db } from "../firebase";
-import Login from '../components/Login';
+import { db } from "../../../firebase";
+import Login from '../../../components/Login';
 import { ArrowLeftIcon } from "@heroicons/react/24/outline"
-import Post from '../components/Post';
+import Post from '../../../components/Post';
 import {
     collection,
     doc,
@@ -18,8 +18,8 @@ import {
     orderBy,
     query,
 } from "@firebase/firestore";
-import Comment from '../components/Comment';
-import Widgets from '../components/Widgets';
+import Widgets from '../../../components/Widgets';
+import Comment from '../../../components/Comment';
 
 function PostPage({ providers }) {
     const isOpen = useRecoilValue(modalState);

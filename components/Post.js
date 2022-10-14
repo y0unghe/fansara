@@ -96,12 +96,17 @@ function Post({ id, post, isPostPage }) {
 
     return (
         <div
-            onClick={() => isPostPage ? null : router.push(`/${id}`)}
+            onClick={() => isPostPage ? null : router.push(`/${post.tag}/status/${id}`)}
             className={`flex flex-col py-5 space-y-5 border-b-2 border-gray-100 ${!isPostPage && "cursor-pointer"}`}>
             {/* Header */}
             <div className='flex flex-row justify-between items-center px-5'>
                 {/* 用户信息 */}
-                <div className='flex flex-row space-x-2 cursor-pointer group'>
+                <div
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        router.push(`/${post.tag}`);
+                    }}
+                    className='flex flex-row space-x-2 cursor-pointer group'>
                     <img
                         src={post?.userImg}
                         alt=""
@@ -135,7 +140,7 @@ function Post({ id, post, isPostPage }) {
                     <img
                         src={post?.image}
                         alt=""
-                        className="max-h-[370px] object-contain w-[250px] ml-5 rounded-lg"
+                        className="max-h-[700px] object-cover"
                     />
                 )
             }
