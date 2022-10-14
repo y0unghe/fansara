@@ -31,7 +31,10 @@ function Sidebar() {
                 onClick={() => router.push("/notifications")}
             />
             <SidebarLink Icon={ChatBubbleLeftEllipsisIcon} text="Messages" />
-            <SidebarLink Icon={BookmarkIcon} text="Bookmarks" />
+            <SidebarLink
+                onClick={() => router.push("/bookmarks")}
+                Icon={BookmarkIcon}
+                text="Bookmarks" />
             <SidebarLink Icon={UserGroupIcon} text="Subscriptions" />
             <SidebarLink Icon={UserCircleIcon} text="My Profile" />
             <button className='hover:bg-blue-600 w-[250px] ml-3 bg-blue-500 text-white py-3 rounded-full'>Post</button>

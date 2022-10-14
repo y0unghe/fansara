@@ -20,6 +20,7 @@ import {
     doc,
     onSnapshot,
     setDoc,
+    serverTimestamp
 } from "@firebase/firestore";
 import { db } from "../firebase";
 
@@ -47,10 +48,11 @@ function Post({ id, post, isPostPage }) {
 
     const bookmark = async () => {
         if (bookmarked) {
-            await deleteDoc(doc(db, "posts", id, "bookmarks", session.user.uid));
+            await deleteDoc(doc(db, "users", session.user.uid, "bookmarks", id));
         } else {
-            await setDoc(doc(db, "posts", id, "bookmarks", session.user.uid), {
-                username: session.user.name
+            await setDoc(doc(db, "users", session.user.uid, "bookmarks", id), {
+                postId: id,
+                timestamp: serverTimestamp()
             });
         }
     }
