@@ -8,7 +8,7 @@ import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-import { ArrowLeftIcon } from "@heroicons/react/24/outline"
+import { ArrowLeftIcon, Cog6ToothIcon } from "@heroicons/react/24/outline"
 import Post from '../components/Post';
 import {
     collection,
@@ -26,6 +26,7 @@ function UserPage() {
     const { tag } = router.query;
     const [posts, setPosts] = useState([]);
     const [user, setUser] = useState({});
+    const { data: session } = useSession();
 
     useEffect(
         () =>
@@ -56,36 +57,56 @@ function UserPage() {
             <main className='min-h-screen flex max-w-[1500px] mx-auto'>
                 <Sidebar />
                 <div className='ml-[340px] flex-grow border-l border-r border-gray-200 border-1'>
-                    <div className='flex sticky top-0 z-50 bg-white flex-row space-x-3 m-3'>
+                    <div className='flex sticky top-0 z-50 bg-white flex-row space-x-3 p-3 py-2'>
                         <ArrowLeftIcon
                             onClick={() => router.push("/")}
                             className='w-5 cursor-pointer hover:text-blue-500' />
                         <div className='flex flex-col'>
-                            <h1 className='text-lg'>{user.username}</h1>
-                            <div className='flex flex-row space-x-1 text-xs'>
+                            <h1 className=''>{user.username}</h1>
+                            <div className='flex flex-row space-x-1 text-xs text-gray-400'>
                                 <span>1.1K Posts</span>
                                 <span>233.4K Likes</span>
                                 <span>1.22M Fans</span>
                             </div>
                         </div>
                     </div>
-                    <div className='flex flex-col items-start mx-5 mt-20 space-y-3 pb-5'>
-                        <img
-                            className='rounded-full h-20 w-20'
-                            src={user.userImg}
-                            alt={user.username} />
-                        <div className='flex flex-col'>
-                            <h1 className='text-lg font-medium'>{user.username}</h1>
-                            <span className='text-gray-400 text-sm'>@{user.tag}</span>
+                    <div className='flex flex-row justify-between mt-20 pr-5'>
+                        <div className='flex flex-col items-start mx-5 space-y-3 pb-5'>
+                            <img
+                                className='rounded-full h-25 w-25'
+                                src={user.userImg}
+                                alt={user.username} />
+                            <div className='flex flex-col'>
+                                <h1 className='text-lg font-medium'>{user.username}</h1>
+                                <span className='text-gray-400 text-sm'>@{user.tag}</span>
+                            </div>
                         </div>
+                        {
+                            session.user.tag === tag && (
+                                <div className='pt-10'>
+                                    <button className='py-2 px-4 rounded-full border-[1px] border-gray-200 hover:bg-blue-200 text-sm'>
+                                        <div className='flex flex-row space-x-2'>
+                                            <Cog6ToothIcon className='text-blue-500 w-5' />
+                                            <h1 className='text-blue-500'>Edit Profile</h1>
+                                        </div>
+                                    </button>
+                                </div>
+                            )
+                        }
                     </div>
-                    <div className='flex flex-col px-5 space-y-3 border-y-[1px] border-y-gray-200 py-5'>
-                        <p className='text-gray-400 text-sm'>Subscribe</p>
-                        <div className='flex flex-row cursor-pointer hover:bg-blue-600 items-center text-white px-5 text-sm justify-between h-[50px] rounded-full bg-blue-500'>
-                            <span>Subscribe</span>
-                            <span className='text-sm'>${user.pricePerMonth ?? 'Free'} per month</span>
-                        </div>
-                    </div>
+                    <div className='border-y-[1px] border-y-gray-100'></div>
+                    {
+                        session.user.tag !== tag && (
+                            <div className='flex flex-col px-5 space-y-3 py-5'>
+                                <p className='text-gray-400 text-sm'>Subscribe</p>
+                                <div className='flex flex-row cursor-pointer hover:bg-blue-600 items-center text-white px-5 text-sm justify-between h-[50px] rounded-full bg-blue-500'>
+                                    <span>Subscribe</span>
+                                    <span className='text-sm'>{user.pricePerMonth ? `$${user.pricePerMonth} per month` : 'Free'}</span>
+                                </div>
+                            </div>
+                        )
+                    }
+                    <div className='border-y-[1px] border-y-gray-100'></div>
                     <div className='pb-72'>
                         {
                             posts.map((post) => (

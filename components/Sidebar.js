@@ -7,6 +7,7 @@ import PopoverExample from './Popover';
 
 function Sidebar() {
     const router = useRouter();
+    const { data: session } = useSession();
 
     return (
         <div className='fixed h-full flex flex-col items-start w-[350px] p-2 gap-4'>
@@ -29,7 +30,9 @@ function Sidebar() {
                 Icon={BookmarkIcon}
                 text="Bookmarks" />
             <SidebarLink Icon={UserGroupIcon} text="Subscriptions" />
-            <SidebarLink Icon={UserCircleIcon} text="My Profile" />
+            <SidebarLink
+                onClick={() => router.push(`/${session.user.tag}`)}
+                Icon={UserCircleIcon} text="My Profile" />
             <button className='hover:bg-blue-600 w-[250px] ml-3 bg-blue-500 text-white py-3 rounded-full'>Post</button>
         </div>
     )
