@@ -129,7 +129,18 @@ function Post({ id, post, isPostPage }) {
             {/* Post Content */}
             <p className='px-5'>
                 <LinkIt
-                    component={(match) => <Link href={match.replace('@', '')}><span className='text-blue-500 hover:underline'>{match}</span></Link>}
+                    component={(match) => {
+                        return (
+                            <div
+                                className='inline cursor-pointer'
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    router.push(`/${match.substring(1)}`)
+                                }}>
+                                <span className='text-blue-500 hover:underline'>{match}</span>
+                            </div>
+                        )
+                    }}
                     regex={/@([\w_]+)/}>
                     {post.text}
                 </LinkIt>
