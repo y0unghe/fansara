@@ -24,7 +24,7 @@ import {
 } from "@firebase/firestore";
 import { db } from "../firebase";
 import Link from 'next/link';
-import { LinkIt } from 'react-linkify-it';
+import { LinkIt, LinkItUrl } from 'react-linkify-it';
 
 function Post({ id, post, isPostPage }) {
     const { data: session } = useSession();
@@ -142,7 +142,22 @@ function Post({ id, post, isPostPage }) {
                         )
                     }}
                     regex={/@([\w_]+)/}>
-                    {post.text}
+                    <LinkIt
+                        component={(match) => {
+                            return (
+                                <div
+                                    className='inline cursor-pointer'
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        router.push(match)
+                                    }}>
+                                    <span className='text-blue-500 hover:underline'>{match}</span>
+                                </div>
+                            )
+                        }}
+                        regex={/(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi}>
+                        {post.text}
+                    </LinkIt>
                 </LinkIt>
             </p>
             {/* Post Image */}
