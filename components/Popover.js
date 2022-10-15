@@ -1,13 +1,15 @@
 import { Popover, Transition } from '@headlessui/react'
 import { UserCircleIcon, Cog8ToothIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/20/solid'
 import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/router';
 import { Fragment } from 'react'
 
 export default function PopoverExample() {
     const { data: session } = useSession();
+    const router = useRouter();
 
     return (
-        <div className="fixed top-2 max-w-sm px-2">
+        <div className="fixed top-2">
             <Popover className="relative">
                 {({ open }) => (
                     <>
@@ -53,7 +55,9 @@ export default function PopoverExample() {
                                                 <UserCircleIcon className='w-5' />
                                                 <span className='text-sm'>My profile</span>
                                             </div>
-                                            <div className='flex space-x-2 px-5 cursor-pointer hover:text-blue-500 h-[30px] items-center rounded-full'>
+                                            <div
+                                                onClick={() => router.push("/settings/profile")}
+                                                className='flex space-x-2 px-5 cursor-pointer hover:text-blue-500 h-[30px] items-center rounded-full'>
                                                 <Cog8ToothIcon className='w-5' />
                                                 <span className='text-sm'>Settings</span>
                                             </div>

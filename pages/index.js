@@ -29,7 +29,6 @@ export default function Home({ providers }) {
         <Feed />
         <Widgets />
         {isOpen && <Modal />}
-        <PopoverExample />
       </main>
     </div>
   )

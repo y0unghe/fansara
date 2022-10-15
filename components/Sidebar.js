@@ -4,6 +4,7 @@ import { BellIcon, UserCircleIcon, ChatBubbleLeftEllipsisIcon, BookmarkIcon, Hom
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
 import { signOut } from "next-auth/react";
+import PopoverExample from './Popover';
 
 function Sidebar() {
     const { data: session } = useSession();
@@ -11,15 +12,8 @@ function Sidebar() {
 
     return (
         <div className='fixed h-full flex flex-col items-start w-[350px] p-2 gap-4'>
-            <img
-                onClick={() => {
-                    // signOut()
-                    // router.push('/');
-                    // router.push('/settings/profile')
-                }}
-                className='rounded-full cursor-pointer h-10 w-10 ml-3 mt-5 hover:border-4 hover:border-blue-500'
-                src={session.user.image}
-                alt={session.user.name} />
+            <PopoverExample />
+            <div className='mt-[60px]'></div>
             <SidebarLink
                 Icon={HomeIcon}
                 text="Home"
