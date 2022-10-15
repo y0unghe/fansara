@@ -3,11 +3,9 @@ import SidebarLink from './SidebarLink'
 import { BellIcon, UserCircleIcon, ChatBubbleLeftEllipsisIcon, BookmarkIcon, HomeIcon, UserGroupIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
-import { signOut } from "next-auth/react";
 import PopoverExample from './Popover';
 
 function Sidebar() {
-    const { data: session } = useSession();
     const router = useRouter();
 
     return (

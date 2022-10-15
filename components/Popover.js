@@ -1,6 +1,6 @@
 import { Popover, Transition } from '@headlessui/react'
 import { UserCircleIcon, Cog8ToothIcon, ArrowLeftOnRectangleIcon } from '@heroicons/react/20/solid'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
 import { Fragment } from 'react'
 
@@ -34,7 +34,7 @@ export default function PopoverExample() {
                                         <div className='flex flex-col my-5 space-y-4'>
                                             <div className='flex flex-col mx-5 space-y-2'>
                                                 <img
-                                                    className='rounded-full cursor-pointer h-10 w-10 hover:border-4 hover:border-blue-500'
+                                                    className='rounded-full h-10 w-10'
                                                     src={session.user.image}
                                                     alt={session.user.name} />
                                                 <div>
@@ -51,7 +51,9 @@ export default function PopoverExample() {
                                                 </div>
                                             </div>
                                             <div className=' h-[1px] bg-gray-100'></div>
-                                            <div className='flex space-x-2 px-5 cursor-pointer hover:text-blue-500 h-[30px] items-center rounded-full'>
+                                            <div
+                                                onClick={() => router.push(`/${session.user.tag}`)}
+                                                className='flex space-x-2 px-5 cursor-pointer hover:text-blue-500 h-[30px] items-center rounded-full'>
                                                 <UserCircleIcon className='w-5' />
                                                 <span className='text-sm'>My profile</span>
                                             </div>
@@ -62,7 +64,12 @@ export default function PopoverExample() {
                                                 <span className='text-sm'>Settings</span>
                                             </div>
                                             <div className=' h-[1px] bg-gray-100'></div>
-                                            <div className='flex space-x-2 px-5 cursor-pointer hover:text-blue-500 h-[30px] items-center rounded-full'>
+                                            <div
+                                                onClick={() => {
+                                                    signOut();
+                                                    router.push("/");
+                                                }}
+                                                className='flex space-x-2 px-5 cursor-pointer hover:text-blue-500 h-[30px] items-center rounded-full'>
                                                 <ArrowLeftOnRectangleIcon className='w-5' />
                                                 <span className='text-sm'>Log out</span>
                                             </div>
@@ -74,6 +81,6 @@ export default function PopoverExample() {
                     </>
                 )}
             </Popover>
-        </div>
+        </div >
     )
 }
