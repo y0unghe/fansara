@@ -2358,6 +2358,11 @@ react-is@^16.13.1:
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
 
+react-linkify-it@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.npmjs.org/react-linkify-it/-/react-linkify-it-1.0.7.tgz#80486c0176644691345b19722678e4d716de5384"
+  integrity sha512-B0Vy0KCAdpkT7Ql/bOpPuAP4l20f78Eaq1yD/q9J2RltPSwD900I0GzQPXaH6gnoWX/qmkBXL42Q3jTnWw8KCw==
+
 react-moment@^1.1.2:
   version "1.1.2"
   resolved "https://registry.npmjs.org/react-moment/-/react-moment-1.1.2.tgz#a9b157c58ddd226a2f746e5ca43415b24a17b6af"

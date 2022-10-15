@@ -18,12 +18,12 @@ function Sidebar() {
                 text="Home"
                 active={router.pathname === "/"}
                 onClick={() => router.push("/")} />
-            <SidebarLink
+            {/* <SidebarLink
                 Icon={BellIcon}
                 text="Notifications"
                 onClick={() => router.push("/notifications")}
             />
-            <SidebarLink Icon={ChatBubbleLeftEllipsisIcon} text="Messages" />
+            <SidebarLink Icon={ChatBubbleLeftEllipsisIcon} text="Messages" /> */}
             <SidebarLink
                 active={router.pathname === '/bookmarks'}
                 onClick={() => router.push("/bookmarks")}
@@ -33,7 +33,7 @@ function Sidebar() {
             <SidebarLink
                 onClick={() => router.push(`/${session.user.tag}`)}
                 Icon={UserCircleIcon} text="My Profile" />
-            <button className='hover:bg-blue-600 w-[250px] ml-3 bg-blue-500 text-white py-3 rounded-full'>Post</button>
+            {/* <button className='hover:bg-blue-600 w-[250px] ml-3 bg-blue-500 text-white py-3 rounded-full'>Post</button> */}
         </div>
     )
 }

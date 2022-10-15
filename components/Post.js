@@ -23,6 +23,8 @@ import {
     serverTimestamp
 } from "@firebase/firestore";
 import { db } from "../firebase";
+import Link from 'next/link';
+import { LinkIt } from 'react-linkify-it';
 
 function Post({ id, post, isPostPage }) {
     const { data: session } = useSession();
@@ -86,7 +88,7 @@ function Post({ id, post, isPostPage }) {
                 setBookmarked(snapshot.exists());
             })
         , [db]
-    )
+    );
 
     return (
         <div
@@ -126,7 +128,11 @@ function Post({ id, post, isPostPage }) {
             </div>
             {/* Post Content */}
             <p className='px-5'>
-                {post.text}
+                <LinkIt
+                    component={(match) => <Link href={match.replace('@', '')}><span className='text-blue-500 hover:underline'>{match}</span></Link>}
+                    regex={/@([\w_]+)/}>
+                    {post.text}
+                </LinkIt>
             </p>
             {/* Post Image */}
             {
