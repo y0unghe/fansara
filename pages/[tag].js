@@ -33,7 +33,9 @@ function UserPage() {
             onSnapshot(query(collection(db, "users"),
                 where("tag", "==", tag),
                 limit(1)), (snapshot) => {
-                    setUser(snapshot.docs[0].data())
+                    if (snapshot.docs.length > 0) {
+                        setUser(snapshot.docs[0].data())
+                    }
                 }), [db, tag]
     )
 
@@ -84,7 +86,9 @@ function UserPage() {
                         {
                             session.user.tag === tag && (
                                 <div className='pt-10'>
-                                    <button className='py-2 px-4 rounded-full border-[1px] border-gray-200 hover:bg-blue-200 text-sm'>
+                                    <button
+                                        onClick={() => router.push("/settings/profile")}
+                                        className='py-2 px-4 rounded-full border-[1px] border-gray-200 hover:bg-blue-200 text-sm'>
                                         <div className='flex flex-row space-x-2'>
                                             <Cog6ToothIcon className='text-blue-500 w-5' />
                                             <h1 className='text-blue-500'>Edit Profile</h1>

@@ -3,7 +3,8 @@ import GoogleProvider from "next-auth/providers/google";
 import {
     setDoc,
     serverTimestamp,
-    doc
+    doc,
+    getDoc
 } from "@firebase/firestore";
 import { db } from "../../../firebase";
 
@@ -23,15 +24,20 @@ export const authOptions = {
 
             session.user.uid = token.sub;
 
-            await setDoc(doc(db, 'users', session.user.uid), {
-                id: session.user.uid,
-                username: session.user.name,
-                userImg: session.user.image,
-                tag: session.user.tag,
-                timestamp: serverTimestamp()
-            }, {
-                merge: true
-            })
+            const docRef = doc(db, 'users', session.user.uid);
+            const docSnap = await getDoc(docRef);
+
+            if (!docSnap.exists()) {
+                await setDoc((docRef), {
+                    id: session.user.uid,
+                    username: session.user.name,
+                    userImg: session.user.image,
+                    tag: session.user.tag,
+                    timestamp: serverTimestamp()
+                }, {
+                    merge: true
+                })
+            }
 
             return session;
         },
