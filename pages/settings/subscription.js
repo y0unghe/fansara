@@ -1,16 +1,30 @@
 import { useRouter } from 'next/router'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ArrowLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
 import Sidebar from '../../components/Sidebar'
 import { getSession, useSession } from "next-auth/react";
 import Head from 'next/head'
 import { db } from '../../firebase'
-import { updateDoc, doc } from 'firebase/firestore';
+import { updateDoc, doc, getDoc } from 'firebase/firestore';
 
 function Subscription() {
     const router = useRouter();
     const { data: session } = useSession();
     const [price, setPrice] = useState(null);
+
+    const getUser = async () => {
+        const docRef = doc(db, "users", session.user.uid);
+        const snapshot = await getDoc(docRef);
+        const data = snapshot.data();
+        setPrice(data.pricePerMonth);
+    }
+
+    useEffect(
+        () => {
+            getUser();
+        },
+        [db, session]
+    );
 
     const save = async () => {
         const docRef = doc(db, "users", session.user.uid);
@@ -69,25 +83,20 @@ function Subscription() {
                     </div>
                     <div className='p-5 border-b-2 border-gray-100 flex flex-col space-y-5'>
                         <div>
-                            <label className="block text-gray-400 text-sm mb-2" htmlFor="email">
-                                Price per month
-                            </label>
-                            <div className='flex flex-row items-center space-x-2 text-gray-300'>
-                                <span>$</span>
+                            <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Price per month</label>
+                            <div class="flex">
+                                <span class="inline-flex items-center px-3 text-sm text-gray-900 bg-gray-50 rounded-l-md border border-r-0 border-gray-300 dark:bg-gray-600 dark:text-gray-400 dark:border-gray-600">
+                                    $
+                                </span>
                                 <input
-                                    onChange={(e) => {
-                                        const price = e.target.value;
-                                        setPrice(price);
-                                    }}
+                                    onChange={(e) => setPrice(e.target.value)}
                                     value={price}
-                                    placeholder='Free'
-                                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                    id="name"
-                                    type="number" />
+                                    type="number"
+                                    id="price"
+                                    class="rounded-none rounded-r-lg border text-gray-900 focus:ring-blue-500 focus:border-blue-500 block flex-1 min-w-0 w-full text-sm border-gray-300 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Free" />
                             </div>
                         </div>
                         <div className='flex flex-row justify-end space-x-5'>
-                            <button className='text-blue-500 hover:text-blue-600'>Cancel</button>
                             <button
                                 onClick={save}
                                 disabled={!price}
