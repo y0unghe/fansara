@@ -25,8 +25,7 @@ function Bookmark() {
                     });
                     const q = query(collection(db, "posts"), where(documentId(), "in", ids))
                     const querySnapshot = await getDocs(q);
-                    const posts = querySnapshot.docs.map(doc => doc.data());
-                    setPosts(posts);
+                    setPosts(querySnapshot.docs);
                 }), [db]
     );
 
@@ -46,7 +45,7 @@ function Bookmark() {
                     <div className='pb-72'>
                         {
                             posts.map((post) => (
-                                <Post isPostPage={false} key={post.id} id={post.id} post={post} />
+                                <Post isPostPage={false} key={post.id} id={post.id} post={post.data()} />
                             ))
                         }
                     </div>
