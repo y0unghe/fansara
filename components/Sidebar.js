@@ -15,7 +15,7 @@ function Sidebar() {
                 onClick={() => {
                     // signOut()
                     // router.push('/');
-                    router.push('/settings/profile')
+                    // router.push('/settings/profile')
                 }}
                 className='rounded-full cursor-pointer h-10 w-10 ml-3 mt-5 hover:border-4 hover:border-blue-500'
                 src={session.user.image}

@@ -7,6 +7,7 @@ import { useRecoilValue } from "recoil";
 import { modalState } from "../atoms/modalAtom";
 import Modal from '../components/Modal';
 import Widgets from '../components/Widgets';
+import PopoverExample from '../components/Popover';
 
 export default function Home({ providers }) {
   const { data: session } = useSession();
@@ -28,6 +29,7 @@ export default function Home({ providers }) {
         <Feed />
         <Widgets />
         {isOpen && <Modal />}
+        <PopoverExample />
       </main>
     </div>
   )
