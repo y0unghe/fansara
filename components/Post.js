@@ -163,7 +163,7 @@ function Post({ id, post, isPostPage }) {
                     <img
                         src={post?.image}
                         alt=""
-                        className="max-h-[700px] object-cover"
+                        className="rounded-lg max-h-[700px] max-w-[250px] object-cover mx-5"
                     />
                 )
             }
