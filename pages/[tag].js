@@ -19,6 +19,7 @@ import {
     limit,
 } from "@firebase/firestore";
 import Widgets from '../components/Widgets';
+import { ColorRing } from 'react-loader-spinner'
 
 function UserPage() {
     const isOpen = useRecoilValue(modalState);
@@ -27,6 +28,7 @@ function UserPage() {
     const [posts, setPosts] = useState([]);
     const [user, setUser] = useState({});
     const { data: session } = useSession();
+    const [subscribing, setSubscribing] = useState(false);
 
     useEffect(
         () =>
@@ -48,6 +50,47 @@ function UserPage() {
                     setPosts(snapshot.docs);
                 }), [db, tag]
     )
+
+    const subscribe = async () => {
+        if (subscribing) {
+            return;
+        }
+
+        const price = user.pricePerMonth;
+        const priceNum = parseFloat(price);
+        const priceInSun = priceNum * 1000000;
+
+        if (window.tronLink.ready) {
+            setSubscribing(true);
+
+            const tronWeb = window.tronLink.tronWeb;
+
+            const host = tronWeb.solidityNode.host;
+            if (host !== 'https://api.shasta.trongrid.io') {
+                setSubscribing(false);
+                console.log('Please switch to Shasta network');
+                return;
+            }
+
+            // TODO: check balance
+
+            const from = tronWeb.defaultAddress.base58;
+            const to = "TQ37FUR6Ptq9gHVZga9FFJBWhaAGVFXgTw";
+            const tx = await tronWeb.transactionBuilder.sendTrx(to, priceInSun, from);
+
+            try {
+                const signedTx = await tronWeb.trx.sign(tx);
+                const res = await tronWeb.trx.sendRawTransaction(signedTx);
+                console.log(res);
+                const txid = res.txid;
+                console.log(txid);
+            } catch (error) {
+                console.log(error);
+            }
+
+            setSubscribing(false);
+        }
+    }
 
     return (
         <div>
@@ -101,11 +144,26 @@ function UserPage() {
                     <div className='border-y-[1px] border-y-gray-100'></div>
                     {
                         session.user.tag !== tag && (
-                            <div className='flex flex-col px-5 space-y-3 py-5'>
+                            <div
+                                onClick={subscribe}
+                                className='flex flex-col px-5 space-y-3 py-5'>
                                 <p className='text-gray-400 text-sm'>Subscribe</p>
-                                <div className='flex flex-row cursor-pointer hover:bg-blue-600 items-center text-white px-5 text-sm justify-between h-[50px] rounded-full bg-blue-500'>
-                                    <span>Subscribe</span>
-                                    <span className='text-sm'>{user.pricePerMonth ? `$${user.pricePerMonth} per month` : 'Free'}</span>
+
+                                <div className={`flex flex-row ${subscribing ? "cursor-default" : "cursor-pointer hover:bg-blue-600"}  items-center text-white px-5 text-sm justify-between h-[50px] rounded-full bg-blue-500`}>
+                                    <span>{subscribing ? 'Subscribing' : 'Subscribe'}</span>
+                                    {
+                                        subscribing
+                                            ?
+                                            <ColorRing
+                                                visible={true}
+                                                height="40"
+                                                width="40"
+                                                ariaLabel="blocks-loading"
+                                                wrapperStyle={{}}
+                                                wrapperClass="blocks-wrapper"
+                                                colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                                            /> : <span className='text-sm'>{user.pricePerMonth ? `$${user.pricePerMonth} per month` : 'Free'}</span>
+                                    }
                                 </div>
                             </div>
                         )
