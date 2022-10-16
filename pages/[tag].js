@@ -8,7 +8,7 @@ import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { db } from "../firebase";
-import { ArrowLeftIcon, Cog6ToothIcon } from "@heroicons/react/24/outline"
+import { ArrowLeftIcon, Cog6ToothIcon, XMarkIcon } from "@heroicons/react/24/outline"
 import Post from '../components/Post';
 import {
     collection,
@@ -28,7 +28,8 @@ function UserPage() {
     const [posts, setPosts] = useState([]);
     const [user, setUser] = useState({});
     const { data: session } = useSession();
-    const [subscribing, setSubscribing] = useState(false);
+    const [subscribing, setSubscribing] = useState(true);
+    const [txHash, setTxHash] = useState("");
 
     useEffect(
         () =>
@@ -82,12 +83,19 @@ function UserPage() {
                 console.log(res);
                 const txid = res.txid;
                 console.log(txid);
+                setTxHash(txid);
             } catch (error) {
                 console.log(error);
             }
 
             setSubscribing(false);
         }
+    }
+
+    const formatAddress = (address) => {
+        return `${address.substring(0, 8)}...${address.substring(
+            address.length - 8
+        )}`;
     }
 
     return (
@@ -177,6 +185,46 @@ function UserPage() {
                 </div>
                 <Widgets />
                 {isOpen && <Modal />}
+                {
+                    subscribing && (
+                        <div className='fixed z-50 right-5 top-5'>
+                            <div class="bg-blue-600 shadow-lg mx-auto w-96 max-w-full text-sm pointer-events-auto bg-clip-padding rounded-lg block mb-3" id="static-example" role="alert" aria-live="assertive" aria-atomic="true" data-mdb-autohide="false">
+                                <div class="bg-blue-600 flex justify-between items-center py-2 px-3 bg-clip-padding border-b border-blue-500 rounded-t-lg">
+                                    <p class="font-bold text-white flex items-center">
+                                        <ColorRing
+                                            visible={true}
+                                            height="30"
+                                            width="30"
+                                            ariaLabel="blocks-loading"
+                                            wrapperStyle={{}}
+                                            wrapperClass="blocks-wrapper"
+                                            colors={['#e15b64', '#f47e60', '#f8b26a', '#abbd81', '#849b87']}
+                                        />
+                                        Pending Transaction</p>
+                                    <div class="flex items-center">
+                                        <button
+                                            onClick={() => {
+                                                setSubscribing(false);
+                                            }}
+                                            type="button"
+                                            class="btn-close btn-close-white box-content w-4 h-4 ml-2 text-white border-none rounded-none opacity-50 focus:shadow-none focus:outline-none focus:opacity-100 hover:text-white hover:opacity-75 hover:no-underline" data-mdb-dismiss="toast" aria-label="Close">
+                                            <XMarkIcon />
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="p-3 bg-blue-600 rounded-b-lg break-words text-white">
+                                    Waiting for confirmation:
+                                    <a
+                                        target="_blank"
+                                        className='underline pl-1'
+                                        href={`https://shasta.tronscan.org/#/transaction/${txHash}`}>
+                                        {formatAddress(txHash)}
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                }
             </main>
         </div>
     )
