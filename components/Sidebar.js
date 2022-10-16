@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SidebarLink from './SidebarLink'
-import { BellIcon, UserCircleIcon, ChatBubbleLeftEllipsisIcon, BookmarkIcon, HomeIcon, UserGroupIcon } from '@heroicons/react/24/outline'
+import { UserCircleIcon, BookmarkIcon, HomeIcon, UserGroupIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
 import PopoverExample from './Popover';
@@ -17,22 +17,26 @@ function Sidebar() {
     }
 
     const connectToWallet = async () => {
-        console.log(window.tronLink);
-
         let tronWeb;
         if (window.tronLink.ready) {
             tronWeb = window.tronLink.tronWeb;
-            const address = tronWeb.defaultAddress.base58;
-            console.log(address);
-            setAddress(address);
         } else {
             const res = await window.tronLink.request({ method: 'tron_requestAccounts' });
-            console.log(res);
             if (res.code === 200) {
                 tronWeb = tronLink.tronWeb;
             }
         }
+        const address = tronWeb.defaultAddress.base58;
+        setAddress(address);
     }
+
+    useEffect(() => {
+        if (window.tronLink.ready) {
+            const tronWeb = window.tronLink.tronWeb;
+            const address = tronWeb.defaultAddress.base58;
+            setAddress(address);
+        }
+    }, [])
 
     return (
         <div className='fixed h-full flex flex-col items-start w-[350px] p-2 gap-4'>
@@ -61,18 +65,20 @@ function Sidebar() {
             {
                 address
                     ?
-                    <div>
-                        <button data-popover-target="popover-bottom" data-popover-placement="bottom" type="button" class="text-white mb-3 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <div className='group'>
+                        <span className='text-blue-500 cursor-pointer ml-[15px]'>
                             {formatAddress(address)}
-                        </button>
-                        <div data-popover id="popover-bottom" role="tooltip" class="inline-block absolute invisible z-10 w-64 text-sm font-light text-gray-500 bg-white rounded-lg border border-gray-200 shadow-sm opacity-0 transition-opacity duration-300 dark:text-gray-400 dark:border-gray-600 dark:bg-gray-800">
-                            <div class="py-2 px-3 bg-gray-100 rounded-t-lg border-b border-gray-200 dark:border-gray-600 dark:bg-gray-700">
-                                <h3 class="font-semibold text-gray-900 dark:text-white">Popover bottom</h3>
+                        </span>
+                        <div className='group-hover:opacity-100 transition-opacity opacity-0'>
+                            <div className='flex flex-col space-y-5 bg-gray-50 p-5 rounded-2xl drop-shadow-2xl'>
+                                <div className='flex space-x-2'>
+                                    <span className=' cursor-pointer hover:text-blue-500'>{address}</span>
+                                    <ClipboardDocumentIcon className='text-gray-500 w-5' />
+                                </div>
+                                <span>{0} TRX</span>
+                                <div className='border-[1px] text-gray-300 w-full'></div>
+                                <button className='bg-blue-500 text-white h-[40px] rounded-full w-full'>Disconnect</button>
                             </div>
-                            <div class="py-2 px-3">
-                                <p>And here's some amazing content. It's very engaging. Right?</p>
-                            </div>
-                            <div data-popper-arrow></div>
                         </div>
                     </div>
                     :
