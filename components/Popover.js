@@ -11,7 +11,7 @@ export default function PopoverExample() {
     return (
         <div className="fixed top-2">
             <Popover className="relative">
-                {({ open }) => (
+                {() => (
                     <>
                         <Popover.Button>
                             <img

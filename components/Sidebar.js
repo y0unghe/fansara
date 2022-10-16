@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import SidebarLink from './SidebarLink'
-import { UserCircleIcon, BookmarkIcon, HomeIcon, UserGroupIcon, ClipboardDocumentIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline'
+import { UserCircleIcon, BookmarkIcon, HomeIcon, UserGroupIcon, ClipboardDocumentIcon, CreditCardIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
 import PopoverExample from './Popover';
@@ -13,8 +13,8 @@ function Sidebar() {
     const [account, setAccount] = useState(null);
 
     const formatAddress = (address) => {
-        return `${address.substring(0, 5)}...${address.substring(
-            address.length - 5
+        return `${address.substring(0, 7)}...${address.substring(
+            address.length - 7
         )}`;
     }
 
@@ -113,18 +113,21 @@ function Sidebar() {
                     node && (
                         node === 'https://api.shasta.trongrid.io' ? (
                             <div className='group'>
-                                <span className='text-blue-500 cursor-pointer ml-[15px]'>
+                                <span className='text-[#C23631] cursor-pointer ml-[15px]'>
                                     {formatAddress(address)}
                                 </span>
-                                <div className='group-hover:opacity-100 transition-opacity opacity-0'>
-                                    <div className='flex flex-col space-y-5 bg-gray-50 p-5 rounded-2xl drop-shadow-2xl'>
+                                <div className='group-hover:opacity-100 transition-opacity opacity-0 mt-3'>
+                                    <div className='flex flex-col space-y-5 bg-white  p-5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5'>
                                         <div className='flex space-x-2'>
-                                            <span className=' cursor-pointer hover:text-blue-500'>{address}</span>
+                                            <span className=' cursor-pointer hover:text-blue-500 text-sm'>{address}</span>
                                             <ClipboardDocumentIcon className='text-gray-500 w-5' />
                                         </div>
-                                        <span>{account ? (account.balance / 1000000) : 0} TRX</span>
+                                        <div className='flex space-x-2'>
+                                            <CreditCardIcon className='w-5 text-gray-500' />
+                                            <span className='text-sm'>{account ? (account.balance / 1000000) : 0} TRX</span>
+                                        </div>
                                         <div className='border-[1px] text-gray-300 w-full'></div>
-                                        <button className='bg-blue-500 text-white h-[40px] rounded-full w-full'>Disconnect</button>
+                                        <button className='bg-[#C23631] text-white h-[40px] rounded-full w-full hover:bg-[#A23631]'>Disconnect</button>
                                     </div>
                                 </div>
                             </div>
