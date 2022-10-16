@@ -36,13 +36,12 @@ function Sidebar() {
 
     useEffect(() => {
         if (window.tronLink.ready) {
-            console.log(window.tronLink);
+            // console.log(window.tronLink);
             const tronWeb = window.tronLink.tronWeb;
             const address = tronWeb.defaultAddress.base58;
             setAddress(address);
             const host = tronWeb.solidityNode.host;
             setNode(host);
-
         }
     }, [])
 
@@ -51,7 +50,7 @@ function Sidebar() {
             return;
         }
         const account = await tronWeb.trx.getAccount(address);
-        console.log(account);
+        // console.log(account);
         setAccount(account);
     }
 
@@ -128,10 +127,10 @@ function Sidebar() {
                             </div>
                         ) : (
                             <div className='flex space-x-2 ml-[10px] items-center'>
-                                <ExclamationCircleIcon className='w-6 text-yellow-500' />
-                                <span className='text-yellow-500 text-base'>
-                                    Please switch to Shasta network
-                                </span>
+                                <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4" role="alert">
+                                    <p class="font-bold">Incorrect Network</p>
+                                    <p>Please switch to Shasta testnet.</p>
+                                </div>
                             </div>
                         )
                     )

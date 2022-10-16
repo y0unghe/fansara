@@ -72,8 +72,6 @@ function UserPage() {
                 return;
             }
 
-            // TODO: check balance
-
             const from = tronWeb.defaultAddress.base58;
             const to = "TQ37FUR6Ptq9gHVZga9FFJBWhaAGVFXgTw";
             const tx = await tronWeb.transactionBuilder.sendTrx(to, priceInSun, from);
