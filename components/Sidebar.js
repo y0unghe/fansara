@@ -107,6 +107,7 @@ function Sidebar() {
             <SidebarLink
                 onClick={() => router.push(`/${session.user.tag}`)}
                 Icon={UserCircleIcon} text="My Profile" />
+
             {
                 address
                     ?
@@ -143,11 +144,11 @@ function Sidebar() {
                         )
                     )
                     :
-                    <button
-                        onClick={connectToWallet}
-                        className='hover:bg-blue-600 w-[250px] ml-3 bg-blue-500 text-white py-3 rounded-full'>
-                        Connect to Wallet
-                    </button>
+                    <div
+                        className={`text-lg flex gap-4 items-center cursor-pointer hoverAnimation text-normal text-[#C23631]`}>
+                        <img src="/trx-icon.svg" className='h-7' />
+                        <span className=''>Connect to Wallet</span>
+                    </div>
             }
         </div>
     )
