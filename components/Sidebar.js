@@ -10,6 +10,7 @@ function Sidebar() {
     const { data: session } = useSession();
     const [address, setAddress] = useState(null);
     const [node, setNode] = useState(null);
+    const [account, setAccount] = useState(null);
 
     const formatAddress = (address) => {
         return `${address.substring(0, 5)}...${address.substring(
@@ -35,15 +36,28 @@ function Sidebar() {
 
     useEffect(() => {
         if (window.tronLink.ready) {
-            // console.log(window.tronLink);
+            console.log(window.tronLink);
             const tronWeb = window.tronLink.tronWeb;
             const address = tronWeb.defaultAddress.base58;
             setAddress(address);
             const host = tronWeb.solidityNode.host;
             setNode(host);
-            console.log(host);
+
         }
     }, [])
+
+    const getAccount = async () => {
+        if (!address) {
+            return;
+        }
+        const account = await tronWeb.trx.getAccount(address);
+        console.log(account);
+        setAccount(account);
+    }
+
+    useEffect(() => {
+        getAccount();
+    }, [address])
 
     const handleNodeChange = useCallback(res => {
         // if (res.data.message && res.data.message.action == "setAccount") {
@@ -106,7 +120,7 @@ function Sidebar() {
                                             <span className=' cursor-pointer hover:text-blue-500'>{address}</span>
                                             <ClipboardDocumentIcon className='text-gray-500 w-5' />
                                         </div>
-                                        <span>{0} TRX</span>
+                                        <span>{account ? (account.balance / 1000000) : 0} TRX</span>
                                         <div className='border-[1px] text-gray-300 w-full'></div>
                                         <button className='bg-blue-500 text-white h-[40px] rounded-full w-full'>Disconnect</button>
                                     </div>
