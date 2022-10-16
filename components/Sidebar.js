@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import SidebarLink from './SidebarLink'
-import { UserCircleIcon, BookmarkIcon, HomeIcon, UserGroupIcon, ClipboardDocumentIcon } from '@heroicons/react/24/outline'
+import { UserCircleIcon, BookmarkIcon, HomeIcon, UserGroupIcon, ClipboardDocumentIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
 import PopoverExample from './Popover';
@@ -9,6 +9,7 @@ function Sidebar() {
     const router = useRouter();
     const { data: session } = useSession();
     const [address, setAddress] = useState(null);
+    const [node, setNode] = useState(null);
 
     const formatAddress = (address) => {
         return `${address.substring(0, 5)}...${address.substring(
@@ -28,15 +29,43 @@ function Sidebar() {
         }
         const address = tronWeb.defaultAddress.base58;
         setAddress(address);
+        const host = tronWeb.solidityNode.host;
+        setNode(host);
     }
 
     useEffect(() => {
         if (window.tronLink.ready) {
+            // console.log(window.tronLink);
             const tronWeb = window.tronLink.tronWeb;
             const address = tronWeb.defaultAddress.base58;
             setAddress(address);
+            const host = tronWeb.solidityNode.host;
+            setNode(host);
+            console.log(host);
         }
     }, [])
+
+    const handleNodeChange = useCallback(res => {
+        // if (res.data.message && res.data.message.action == "setAccount") {
+        //     if (window.tronWeb) {
+        //         if (res.data.message.data.address != this.defaultAccount) {
+        //             window.location.reload();
+        //         }
+        //     } else {
+        //         window.location.reload();
+        //     }
+        // }
+        if (res.data.message && res.data.message.action == "setNode") {
+            window.location.reload();
+        }
+    })
+
+    useEffect(() => {
+        window.addEventListener('message', handleNodeChange);
+        return () => {
+            window.removeEventListener('message', handleNodeChange);
+        }
+    }, [handleNodeChange])
 
     return (
         <div className='fixed h-full flex flex-col items-start w-[350px] p-2 gap-4'>
@@ -65,22 +94,33 @@ function Sidebar() {
             {
                 address
                     ?
-                    <div className='group'>
-                        <span className='text-blue-500 cursor-pointer ml-[15px]'>
-                            {formatAddress(address)}
-                        </span>
-                        <div className='group-hover:opacity-100 transition-opacity opacity-0'>
-                            <div className='flex flex-col space-y-5 bg-gray-50 p-5 rounded-2xl drop-shadow-2xl'>
-                                <div className='flex space-x-2'>
-                                    <span className=' cursor-pointer hover:text-blue-500'>{address}</span>
-                                    <ClipboardDocumentIcon className='text-gray-500 w-5' />
+                    node && (
+                        node === 'https://api.shasta.trongrid.io' ? (
+                            <div className='group'>
+                                <span className='text-blue-500 cursor-pointer ml-[15px]'>
+                                    {formatAddress(address)}
+                                </span>
+                                <div className='group-hover:opacity-100 transition-opacity opacity-0'>
+                                    <div className='flex flex-col space-y-5 bg-gray-50 p-5 rounded-2xl drop-shadow-2xl'>
+                                        <div className='flex space-x-2'>
+                                            <span className=' cursor-pointer hover:text-blue-500'>{address}</span>
+                                            <ClipboardDocumentIcon className='text-gray-500 w-5' />
+                                        </div>
+                                        <span>{0} TRX</span>
+                                        <div className='border-[1px] text-gray-300 w-full'></div>
+                                        <button className='bg-blue-500 text-white h-[40px] rounded-full w-full'>Disconnect</button>
+                                    </div>
                                 </div>
-                                <span>{0} TRX</span>
-                                <div className='border-[1px] text-gray-300 w-full'></div>
-                                <button className='bg-blue-500 text-white h-[40px] rounded-full w-full'>Disconnect</button>
                             </div>
-                        </div>
-                    </div>
+                        ) : (
+                            <div className='flex space-x-2 ml-[10px] items-center'>
+                                <ExclamationCircleIcon className='w-6 text-yellow-500' />
+                                <span className='text-yellow-500 text-base'>
+                                    Please switch to Shasta network
+                                </span>
+                            </div>
+                        )
+                    )
                     :
                     <button
                         onClick={connectToWallet}
