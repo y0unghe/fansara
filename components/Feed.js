@@ -17,7 +17,7 @@ function Feed() {
     );
 
     return (
-        <div className=' ml-[340px] flex-grow border-l border-r border-gray-200 border-1'>
+        <div className=' ml-[300px] flex-grow border-l border-r border-gray-200 border-1 max-w-[600px]'>
             <div className='bg-white top-0 z-50 text-black font-bold p-4 border-b border-1 border-gray-200 sticky'>
                 Home
             </div>

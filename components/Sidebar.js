@@ -84,7 +84,7 @@ function Sidebar() {
     }, [handleNodeChange])
 
     return (
-        <div className='fixed h-full flex flex-col items-start w-[350px] p-2 gap-4'>
+        <div className='fixed h-full flex flex-col items-start w-[300px] p-2 gap-4'>
             <PopoverExample />
             <div className='mt-[60px]'></div>
             <SidebarLink
@@ -113,20 +113,22 @@ function Sidebar() {
                     node && (
                         node === 'https://api.shasta.trongrid.io' ? (
                             <div className='group'>
-                                <span className='text-[#C23631] cursor-pointer ml-[15px]'>
-                                    {formatAddress(address)}
-                                </span>
+                                <div
+                                    className={`text-lg flex gap-4 items-center cursor-pointer hoverAnimation text-normal text-gray-500`}>
+                                    <img src="/trx-icon.svg" className='h-7' />
+                                    <span className=''>{formatAddress(address)}</span>
+                                </div>
                                 <div className='group-hover:opacity-100 transition-opacity opacity-0 mt-3'>
                                     <div className='flex flex-col space-y-5 bg-white  p-5 rounded-lg shadow-lg ring-1 ring-black ring-opacity-5'>
-                                        <div className='flex space-x-2'>
-                                            <span className=' cursor-pointer hover:text-blue-500 text-sm'>{address}</span>
+                                        <div className='flex space-x-2 cursor-pointer hover:text-blue-500'>
                                             <ClipboardDocumentIcon className='text-gray-500 w-5' />
+                                            <span className='  text-sm'>{formatAddress(address)}</span>
                                         </div>
                                         <div className='flex space-x-2'>
                                             <CreditCardIcon className='w-5 text-gray-500' />
                                             <span className='text-sm'>{account ? (account.balance / 1000000) : 0} TRX</span>
                                         </div>
-                                        <div className='border-[1px] text-gray-300 w-full'></div>
+                                        <div className='border-b-[1px] w-full'></div>
                                         <button className='bg-[#C23631] text-white h-[40px] rounded-full w-full hover:bg-[#A23631]'>Disconnect</button>
                                     </div>
                                 </div>
