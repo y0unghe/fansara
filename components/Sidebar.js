@@ -26,6 +26,9 @@ function Sidebar() {
             const res = await window.tronLink.request({ method: 'tron_requestAccounts' });
             if (res.code === 200) {
                 tronWeb = tronLink.tronWeb;
+
+                const message = "Sign in from Fansara";
+                const signedMessage = await tronWeb.trx.sign(message);
             }
         }
         const address = tronWeb.defaultAddress.base58;
