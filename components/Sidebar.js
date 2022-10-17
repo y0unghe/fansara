@@ -4,6 +4,8 @@ import { UserCircleIcon, BookmarkIcon, HomeIcon, UserGroupIcon, ClipboardDocumen
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router';
 import PopoverExample from './Popover';
+import { updateDoc, doc } from 'firebase/firestore';
+import { db } from '../firebase';
 
 function Sidebar() {
     const router = useRouter();
@@ -29,6 +31,10 @@ function Sidebar() {
 
                 const message = "Sign in from Fansara";
                 const signedMessage = await tronWeb.trx.sign(message);
+
+                await updateDoc(doc(db, 'users', session.user.uid), {
+                    address: tronWeb.defaultAddress.base58
+                });
             }
         }
         const address = tronWeb.defaultAddress.base58;
@@ -130,7 +136,8 @@ function Sidebar() {
                                             <span className='text-sm'>{account ? (account.balance / 1000000) : 0} TRX</span>
                                         </div>
                                         <div className='border-b-[1px] w-full'></div>
-                                        <button className='bg-[#C23631] text-white h-[40px] rounded-full w-full hover:bg-[#A23631]'>Disconnect</button>
+                                        <button
+                                            className='bg-[#C23631] text-white h-[40px] rounded-full w-full hover:bg-[#A23631]'>Disconnect</button>
                                     </div>
                                 </div>
                             </div>
