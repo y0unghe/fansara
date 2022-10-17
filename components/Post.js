@@ -92,7 +92,7 @@ function Post({ id, post, isPostPage }) {
     return (
         <div
             onClick={() => isPostPage ? null : router.push(`/${post.tag}/status/${id}`)}
-            className={`flex flex-col py-5 space-y-5 border-b-2 border-gray-100 ${!isPostPage && "cursor-pointer"}`}>
+            className={`flex flex-col py-5 space-y-5 border-b-2 border-gray-100 ${!isPostPage && "cursor-pointer"} hover:bg-gray-50`}>
             {/* Header */}
             <div className='flex flex-row justify-between items-center px-5'>
                 {/* 用户信息 */}

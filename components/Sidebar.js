@@ -38,7 +38,7 @@ function Sidebar() {
     }
 
     useEffect(() => {
-        if (window.tronLink.ready) {
+        if (window.tronLink.ready && !address) {
             // console.log(window.tronLink);
             const tronWeb = window.tronLink.tronWeb;
             const address = tronWeb.defaultAddress.base58;
@@ -46,7 +46,7 @@ function Sidebar() {
             const host = tronWeb.solidityNode.host;
             setNode(host);
         }
-    }, [])
+    }, [address])
 
     const getAccount = async () => {
         if (!address) {
@@ -145,6 +145,7 @@ function Sidebar() {
                     )
                     :
                     <div
+                        onClick={connectToWallet}
                         className={`text-lg flex gap-4 items-center cursor-pointer hoverAnimation text-normal text-[#C23631]`}>
                         <img src="/trx-icon.svg" className='h-7' />
                         <span className=''>Connect to Wallet</span>
