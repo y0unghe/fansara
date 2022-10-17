@@ -29,6 +29,7 @@ function Feed() {
         if (!last) {
             return;
         }
+
         const next = query(collection(db, "posts"), orderBy("timestamp", "desc"),
             startAfter(last),
             limit(limitCount));
@@ -53,14 +54,13 @@ function Feed() {
         <div className=' ml-[300px] flex-grow border-l border-r border-gray-200 border-1 max-w-[600px]'>
             <div className='bg-white top-0 z-50 text-black font-bold p-4 border-b border-1 border-gray-200 sticky'>
                 Home
-                <button onClick={loadNextPage}>Test</button>
             </div>
             <Input />
             <div className='pb-72'>
                 <InfiniteScroll
                     hasMore={true}
                     loadMore={loadNextPage}
-                    loader={<div className="flex justify-center py-5"><ColorRingLoader /></div>}
+                    loader={hasMore ?? <div key={0} className="flex justify-center py-5"><ColorRingLoader /></div>}
                     pageStart={0}>
                     {
                         posts.map((post) => (
