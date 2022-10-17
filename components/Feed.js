@@ -3,12 +3,15 @@ import React, { useEffect, useState } from 'react'
 import { db } from '../firebase'
 import Input from './Input'
 import Post from "./Post";
+import InfiniteScroll from 'react-infinite-scroller';
+import ColorRingLoader from "../components/ColorRingLoader";
 
 function Feed() {
     const [posts, setPosts] = useState([]);
     const [last, setLast] = useState(null);
+    const [hasMore, setHasMore] = useState(false);
 
-    const limitCount = 2;
+    const limitCount = 20;
 
     useEffect(
         () =>
@@ -34,6 +37,7 @@ function Feed() {
         const docs = snapshot.docs;
 
         if (docs.length === 0) {
+            setHasMore(false);
             return;
         }
 
@@ -42,6 +46,7 @@ function Feed() {
 
         const morePosts = [...posts, ...docs];
         setPosts(morePosts);
+        setHasMore(true);
     }
 
     return (
@@ -52,11 +57,17 @@ function Feed() {
             </div>
             <Input />
             <div className='pb-72'>
-                {
-                    posts.map((post) => (
-                        <Post isPostPage={false} key={post.id} id={post.id} post={post.data()} />
-                    ))
-                }
+                <InfiniteScroll
+                    hasMore={true}
+                    loadMore={loadNextPage}
+                    loader={<div className="flex justify-center py-5"><ColorRingLoader /></div>}
+                    pageStart={0}>
+                    {
+                        posts.map((post) => (
+                            <Post isPostPage={false} key={post.id} id={post.id} post={post.data()} />
+                        ))
+                    }
+                </InfiniteScroll>
             </div>
         </div>
     )
