@@ -185,7 +185,6 @@ function UserPage() {
                                             onClick={subscribe}
                                             className='flex flex-col px-5 space-y-3 py-5'>
                                             <p className='text-gray-400 text-sm'>Subscribe</p>
-
                                             <div className={`flex flex-row ${subscribing ? "cursor-default" : "cursor-pointer hover:bg-blue-600"}  items-center text-white px-5 text-sm justify-between h-[50px] rounded-full bg-blue-500`}>
                                                 <span>{subscribing ? 'Subscribing' : 'Subscribe'}</span>
                                                 {
