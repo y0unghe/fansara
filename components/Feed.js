@@ -36,14 +36,13 @@ function Feed() {
             const expiredAt = new Date(timestamp);
             const now = Date.now;
             const expired = expiredAt > now;
-            console.log(expired);
             if (!expired) {
                 return data.uid;
             }
         });
         console.log(ids);
 
-        const postQuery = query(collection(db, "posts"), where("id", "in", ids), limit(limitCount));
+        const postQuery = query(collection(db, "posts"), where("id", "in", ids), orderBy("timestamp", "desc"), limit(limitCount));
         const postSnapshot = await getDocs(postQuery);
         const postDocs = postSnapshot.docs;
         setPosts(postDocs);
